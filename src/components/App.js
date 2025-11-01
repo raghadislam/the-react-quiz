@@ -10,6 +10,7 @@ const initialState = {
   questions: [],
   status: "loading", // 'loading', 'ready', 'active', 'finished', 'error'
   currentQuestionIndex: 0,
+  answer: null,
   // score: 0,
 };
 
@@ -21,16 +22,16 @@ function reducer(state, action) {
       return { ...state, status: "error" };
     case "startQuiz":
       return { ...state, status: "active" };
+    case "newAnswer":
+      return { ...state, answer: action.payload };
     default:
       throw new Error(`Unknown action type: ${action.type}`);
   }
 }
 
 export default function App() {
-  const [{ questions, status, currentQuestionIndex }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ questions, status, currentQuestionIndex, answer }, dispatch] =
+    useReducer(reducer, initialState);
 
   const numQuestions = questions.length;
   useEffect(function () {
@@ -50,7 +51,11 @@ export default function App() {
           <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
         )}
         {status === "active" && (
-          <Question question={questions[currentQuestionIndex]} />
+          <Question
+            question={questions[currentQuestionIndex]}
+            dispatch={dispatch}
+            answer={answer}
+          />
         )}
       </Main>
     </div>
