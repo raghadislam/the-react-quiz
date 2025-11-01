@@ -1,5 +1,4 @@
 function Options({ question, dispatch, answer }) {
-  console.log(question);
   const hasAnswered = answer !== null;
   return (
     <div className="options">

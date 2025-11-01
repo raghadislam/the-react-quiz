@@ -11,7 +11,7 @@ const initialState = {
   status: "loading", // 'loading', 'ready', 'active', 'finished', 'error'
   currentQuestionIndex: 0,
   answer: null,
-  // score: 0,
+  score: 0,
 };
 
 function reducer(state, action) {
@@ -23,7 +23,14 @@ function reducer(state, action) {
     case "startQuiz":
       return { ...state, status: "active" };
     case "newAnswer":
-      return { ...state, answer: action.payload };
+      const question = state.questions.at(state.currentQuestionIndex);
+      const isCorrect = action.payload === question.correctOption;
+
+      return {
+        ...state,
+        answer: action.payload,
+        score: isCorrect ? state.score + question.points : state.score,
+      };
     default:
       throw new Error(`Unknown action type: ${action.type}`);
   }
